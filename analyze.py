@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+from matplotlib.patches import FancyBboxPatch, Patch
 from experiment import METHODS
 
 ROOT=Path(__file__).resolve().parent
@@ -63,6 +64,62 @@ for ax,n in zip(axes,['Cancer','Bank']):
 axes[0].set_ylabel('Certified error bound')
 fig.legend(*axes[0].get_legend_handles_labels(),loc='lower center',ncol=6,bbox_to_anchor=(.5,-.06))
 fig.tight_layout(rect=(0,.08,1,1));save(fig,'raw_units')
+
+# Model architecture: only training features enter the optimization objective.
+# The six optimizers update the SAME parameter vector and objective.
+fig,ax=plt.subplots(figsize=(7,1.3))
+ax.set_xlim(0,7);ax.set_ylim(0,1.3);ax.axis('off')
+centers=[.85,2.55,4.25,6.0]
+labels=['Train-fitted\nfeatures + bias',r'Linear score'+'\n'+r'$z=x^\top w$',
+        'Sigmoid\n'+r'$p=\sigma(z)$','Training objective\n'+r'$f_\lambda(w)$']
+for x,label in zip(centers,labels):
+    ax.add_patch(FancyBboxPatch((x-.71,.66),1.42,.53,boxstyle='round,pad=.025',
+                               facecolor='#eef5f7',edgecolor='#31576b',lw=1))
+    ax.text(x,.925,label,ha='center',va='center',fontsize=9)
+for left,right in zip(centers[:-1],centers[1:]):
+    ax.annotate('',(right-.75,.925),(left+.75,.925),arrowprops=dict(arrowstyle='->',lw=1,color='#31576b'))
+ax.plot([6,6,2.55],[.62,.34,.34],color='#009e73',lw=1)
+ax.annotate('',(2.55,.63),(2.55,.34),arrowprops=dict(arrowstyle='->',lw=1,color='#009e73'))
+ax.text(4.28,.12,'Six solvers update w; same model, split, lambda and certificate',
+        ha='center',va='center',fontsize=8,color='#075e49')
+fig.tight_layout(pad=.2);save(fig,'model_pipeline')
+
+# Show times ONLY for certified solves. Capped times must not look competitive.
+fig,axes=plt.subplots(1,3,figsize=(7,2.1),sharey=True)
+for ax,n in zip(axes,NAMES):
+    for j,(m,color) in enumerate(zip(METHODS,COLORS)):
+        rr=select(dataset=n,group='main',method=m)
+        good=[r['seconds'] for r in rr if r['status']=='certified']
+        if good:
+            med=float(np.median(good));lo=min(good);hi=max(good)
+            ax.barh(j,med,height=.6,color=color,alpha=.75)
+            ax.errorbar(med,j,xerr=[[med-lo],[hi-med]],fmt='none',ecolor='black',capsize=2,lw=.8)
+            ax.text(max(hi*1.18,med*1.4,.001),j,f'{len(good)}/3',va='center',fontsize=7)
+        else:
+            ax.text(.001,j,'0/3: capped',va='center',fontsize=7,color='#a44800')
+    ax.set_title(n);ax.set_xscale('log');ax.set_xlim(.0007,4);ax.set_xlabel('Certified solve time (s)')
+    ax.grid(axis='x',alpha=.15);ax.set_axisbelow(True)
+axes[0].set_yticks(range(len(METHODS)),METHODS,fontsize=8);axes[0].invert_yaxis()
+fig.tight_layout(pad=.5);save(fig,'certified_timing')
+
+# All 17 configurations x 6 methods. Same rows as the complete run archive.
+instances=[]
+for r in RUNS:
+    if r['key'] not in [x['key'] for x in instances]:instances.append(r)
+matrix=np.array([[int(select(key=r['key'],method=m)[0]['status']=='certified') for m in METHODS] for r in instances])
+rowlabels=[f"{r['dataset']}{' raw' if not r['scaled'] else ''} s{r['seed']} / {r['lam']:g}" for r in instances]
+from matplotlib.colors import ListedColormap
+fig,ax=plt.subplots(figsize=(7,3.35))
+ax.imshow(matrix,cmap=ListedColormap(['#f8ddbf','#9bcdbb']),vmin=0,vmax=1,aspect='auto')
+ax.set_xticks(range(6),['GD','AGD','Restart-AGD','L-BFGS','Newton-CG','Newton-PCG'],fontsize=8)
+ax.set_yticks(range(len(instances)),rowlabels,fontsize=7)
+ax.tick_params(length=0);ax.xaxis.tick_top()
+for i in range(len(instances)):
+    for j in range(6):ax.text(j,i,'OK' if matrix[i,j] else 'CAP',ha='center',va='center',fontsize=6.5)
+ax.set_xticks(np.arange(-.5,6,1),minor=True);ax.set_yticks(np.arange(-.5,len(instances),1),minor=True)
+ax.grid(which='minor',color='white',linewidth=.8);ax.tick_params(which='minor',length=0)
+for sp in ax.spines.values():sp.set_visible(False)
+fig.tight_layout(pad=.3);save(fig,'status_matrix')
 
 def write(name,lines): (OUT/name).write_text('\n'.join(lines)+'\n'+r'\bottomrule'+'\n')
 lines=[]

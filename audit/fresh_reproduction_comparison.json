@@ -1,0 +1,22 @@
+{
+  "runs": 102,
+  "execution": "Fresh GitHub clone, newly created Python 3.11 virtual environment, pinned direct dependencies, empty results directory",
+  "status_iteration_pass_mismatches": [],
+  "max_absolute_differences": {
+    "objective": 0.0,
+    "bound": 0.0,
+    "test_accuracy": 0.0,
+    "test_balanced_accuracy": 0.0,
+    "test_auc": 0.0,
+    "test_logloss": 0.0
+  },
+  "time_ratio_range": [
+    0.7835579344782573,
+    1.1958142375695704
+  ],
+  "time_ratio_median": 1.020495564044929,
+  "source_commit": "f3b0a0455dd48740e5f193de760f047cc55ffe8f",
+  "audit_date": "2026-10-28",
+  "optimizer_implementation_changed": false,
+  "note": "Later commits add audits and visualization only; original experiment results and optimizer updates are retained."
+}

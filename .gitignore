@@ -3,4 +3,5 @@ __pycache__/
 .venv/
 results_quick/
 results_original/
+results_frozen/
 .DS_Store

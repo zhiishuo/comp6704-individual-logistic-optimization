@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 import numpy as np
 from scipy.special import expit
-from sklearn.metrics import log_loss, roc_auc_score
+from sklearn.metrics import balanced_accuracy_score, log_loss, roc_auc_score
 from threadpoolctl import threadpool_limits
 from experiment import ROOT, TOL, dataset, check_derivatives
 
@@ -18,7 +18,7 @@ def verify():
         assert np.array_equal(tr,split['train_indices']) and np.array_equal(te,split['test_indices'])
         assert not np.intersect1d(tr,te).size
         lam=r['lam']
-        # Dense expression used here rather than calling Logistic.fg.
+        # Recompute directly rather than calling Logistic.fg.
         def recompute(w):
             z=X@w
             f=np.mean(np.logaddexp(0,z)-y*z)+lam*np.dot(w,w)/2
@@ -35,6 +35,7 @@ def verify():
             assert abs(log_loss(yt,p)-r['test_logloss'])<1e-12
             assert abs(roc_auc_score(yt,p)-r['test_auc'])<1e-12
             assert abs(np.mean((p>=.5)==yt)-r['test_accuracy'])<1e-12
+            assert abs(balanced_accuracy_score(yt,p>=.5)-r['test_balanced_accuracy'])<1e-12
             c=r['counts'];assert r['passes']==2*c['fg']+c['f']+2*c['hvp']+c['diag']
             assert len(r['history'])==r['iterations']+1
             if r['method'] in ['GD','Restart-AGD','L-BFGS','Newton-CG','Newton-PCG']:

@@ -16,6 +16,7 @@ source .venv/bin/activate
 python -m pip install -r requirements.txt
 python experiment.py
 python verify.py
+python audit.py
 python analyze.py
 ```
 
@@ -102,6 +103,18 @@ test metrics, split disjointness, work counts and monotonicity from saved
 parameter vectors. Central differences check gradient and Hessian-vector
 products on a fixed random fixture. All failures remain in the archive:
 84/102 runs certify; 18 reach the iteration limit. Of 54 main runs, 48 certify.
+
+`audit.py` adds directional derivative checks on standardized Cancer, Digits
+and Bank and on raw-unit Cancer/Bank, checks the explicit Hessian against the
+matrix-free product, compares the L-BFGS two-loop recursion against dense
+inverse-BFGS updates, checks CG/PCG against a direct solve on an SPD fixture,
+and matches all individual run JSON files with the aggregate and CSV.
+The analysis includes the classifier/optimization-loop diagram, certified-time
+overview and complete 17-by-6 status matrix in addition to the original traces.
+`audit/fresh_reproduction_comparison.json` records a full 102-run fresh-environment
+reproduction from the public repository: statuses, iterations, passes,
+objectives and reported test metrics matched exactly on the tested machine;
+wall times varied. This does not assert bitwise reproducibility across hardware.
 
 Bank observations are randomly split for optimizer benchmarking; this is not
 a time-forward deployment evaluation, and repeated contacts may share clients.

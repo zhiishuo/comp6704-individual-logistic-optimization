@@ -1,0 +1,50 @@
+{
+  "real_data_derivatives": [
+    {
+      "dataset": "Cancer",
+      "scaled": true,
+      "directional_gradient_error": 7.502332088904495e-14,
+      "directional_hvp_relative_error": 2.3120062720101543e-11,
+      "explicit_hessian_relative_error": 9.59523210445293e-17,
+      "min_eigenvalue": 0.0010316541497469415
+    },
+    {
+      "dataset": "Digits",
+      "scaled": true,
+      "directional_gradient_error": 1.048180639506846e-13,
+      "directional_hvp_relative_error": 9.489021918198442e-12,
+      "explicit_hessian_relative_error": 5.740922258710543e-17,
+      "min_eigenvalue": 0.0009999999999999452
+    },
+    {
+      "dataset": "Bank",
+      "scaled": true,
+      "directional_gradient_error": 1.9990259447766334e-13,
+      "directional_hvp_relative_error": 1.6450443778678217e-11,
+      "explicit_hessian_relative_error": 1.9466494644546932e-16,
+      "min_eigenvalue": 0.000999999999999014
+    },
+    {
+      "dataset": "Cancer",
+      "scaled": false,
+      "directional_gradient_error": 4.487868410230078e-13,
+      "directional_hvp_relative_error": 1.6266219349389246e-10,
+      "explicit_hessian_relative_error": 6.894797515216171e-16,
+      "min_eigenvalue": 0.001000112810120856
+    },
+    {
+      "dataset": "Bank",
+      "scaled": false,
+      "directional_gradient_error": 6.334863189572104e-14,
+      "directional_hvp_relative_error": 5.398179170908604e-11,
+      "explicit_hessian_relative_error": 3.066792837127717e-14,
+      "min_eigenvalue": 0.000999999999999846
+    }
+  ],
+  "lbfgs_dense_recursion_max_error": 2.7755575615628914e-17,
+  "cg_relative_residuals": [
+    3.186249268865521e-16,
+    1.633125620521727e-16
+  ],
+  "consistent_individual_json_csv_aggregate_runs": 102
+}

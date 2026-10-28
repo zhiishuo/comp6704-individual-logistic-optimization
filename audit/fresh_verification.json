@@ -1,0 +1,19 @@
+{
+  "runs_verified": 102,
+  "instances": 17,
+  "certified": 84,
+  "max_objective_error": 0.0,
+  "derivative_checks": {
+    "gradient_max_error": 1.74922021312085e-11,
+    "hvp_max_error": 1.5396656172228518e-11
+  },
+  "checks": [
+    "disjoint split indices",
+    "saved solution objective",
+    "gradient certificate",
+    "independent reference bound",
+    "test metrics",
+    "work counts",
+    "monotone accepted objectives"
+  ]
+}
