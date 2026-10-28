@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.venv/
+results_quick/
+results_original/
+.DS_Store

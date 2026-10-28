@@ -26,8 +26,12 @@ benchmark, rename `results` to `results_original` before executing. For a small
 18-run check use `python experiment.py --quick`; it writes `results_quick/` and
 does not replace the full results. `analyze.py` intentionally reads the full
 `results/`. It writes `analysis/` figures, numerical tables and a summary.
-The LaTeX report reads tables/figures directly from this directory's analysis
-subfolder; no manually typed results need to be synchronized.
+The downloadable report source bundles an unmodified copy of the generated
+analysis tables and figures; no numerical table entries are manually typed.
+To rebuild it after new experiments, copy the contents of `analysis/` into
+the report source's `analysis/` folder, then compile `main.tex` with Tectonic
+or an appropriate LaTeX installation. The public code repository does not
+include the personal report or student ID.
 
 ## Data and attribution
 
